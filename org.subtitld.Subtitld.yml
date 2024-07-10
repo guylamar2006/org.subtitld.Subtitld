@@ -1,9 +1,9 @@
 app-id: org.subtitld.Subtitld
 runtime: org.kde.Platform
-runtime-version: '6.3'
+runtime-version: '6.7'
 sdk: org.kde.Sdk
 base: com.riverbankcomputing.PyQt.BaseApp
-base-version: '6.3'
+base-version: '6.7'
 
 command: subtitld
 rename-desktop-file: subtitld.desktop
@@ -23,8 +23,8 @@ modules:
     buildsystem: autotools
     sources:
       - type: archive
-        url: https://github.com/FFMS/ffms2/archive/refs/tags/2.40.tar.gz
-        sha256: 82e95662946f3d6e1b529eadbd72bed196adfbc41368b2d50493efce6e716320
+        url: https://github.com/FFMS/ffms2/archive/refs/tags/5.0.tar.gz
+        sha256: 7770af0bbc0063f9580a6a5c8e7c51f1788f171d7da0b352e48a1e60943a8c3c
 
   - name: libmpv
     cleanup:
@@ -37,11 +37,11 @@ modules:
       - python3 waf install
     sources:
       - type: archive
-        url: https://github.com/mpv-player/mpv/archive/v0.34.1.tar.gz
-        sha256: 32ded8c13b6398310fa27767378193dc1db6d78b006b70dbcbd3123a1445e746
+        url: https://github.com/mpv-player/mpv/archive/refs/tags/v0.38.0.tar.gz
+        sha256: 86d9ef40b6058732f67b46d0bbda24a074fae860b3eaae05bab3145041303066
       - type: file
-        url: https://waf.io/waf-2.0.23
-        sha256: 28a2e4583314a162cfcbffefb8a9202c1d7869040d30b5852da479b76d9c0491
+        url: https://waf.io/waf-2.1.1
+        sha256: 2e66e01fd564f09106419389119c78143327c89a35f26ee3ed376f0ee410a14d
         dest-filename: waf
     modules:
       - name: libass
@@ -53,8 +53,8 @@ modules:
           - "--disable-static"
         sources:
           - type: archive
-            url: https://github.com/libass/libass/releases/download/0.15.2/libass-0.15.2.tar.xz
-            sha256: 1be2df9c4485a57d78bb18c0a8ed157bc87a5a8dd48c661961c625cb112832fd
+            url: https://github.com/libass/libass/releases/download/0.17.3/libass-0.17.3.tar.xz
+            sha256: eae425da50f0015c21f7b3a9c7262a910f0218af469e22e2931462fed3c50959
         modules:
           - name: fribidi
             cleanup:
@@ -70,8 +70,24 @@ modules:
             sources:
             - type: git
               url: https://github.com/fribidi/fribidi.git
-              tag: v1.0.12
-              commit: 6428d8469e536bcbb6e12c7b79ba6659371c435a
+              tag: v1.0.15
+              commit: 2803ff176713a27d7edb57a24bc60c38a02182e9
+          - name: libplacebo
+            cleanup:
+              - "/bin"
+              - "/include"
+              - "/lib/pkgconfig"
+              - "/lib/*.la"
+              - "/share/man"
+            buildsystem: meson
+            config-opts:
+              - "--buildtype=release"
+              - "-Ddocs=false"
+            sources:
+            - type: git
+              url: https://code.videolan.org/videolan/libplacebo.git
+              tag: v7.349.0
+              commit: 1fd3c7bde7b943fe8985c893310b5269a09b46c5
       - name: ffmpeg
         cleanup:
           - "/include"
@@ -102,8 +118,8 @@ modules:
               - "--enable-nvdec"
         sources:
           - type: archive
-            url: https://ffmpeg.org/releases/ffmpeg-5.0.1.tar.xz
-            sha256: ef2efae259ce80a240de48ec85ecb062cecca26e4352ffb3fda562c21a93007b
+            url: https://ffmpeg.org/releases/ffmpeg-7.0.tar.xz
+            sha256: 4426a94dd2c814945456600c8adfc402bee65ec14a70e8c531ec9a2cd651da7b
         modules:
           - name: ffnvcodec
             only-arches:
@@ -115,8 +131,8 @@ modules:
             sources:
               - type: git
                 url: https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-                tag: n11.1.5.1
-                commit: 84483da70d903239d4536763fde8c7e6c4e80784
+                tag: n12.2.72.0 	
+                commit:	c69278340ab1d5559c7d7bf0edf615dc33ddbba7
           - name: xvid
             subdir: build/generic
             sources:
@@ -138,8 +154,8 @@ modules:
               - "--enable-vp9-highbitdepth"
             sources:
               - type: archive
-                url: https://github.com/webmproject/libvpx/archive/refs/tags/v1.11.0.tar.gz
-                sha256: 965e51c91ad9851e2337aebcc0f517440c637c506f3a03948062e3d5ea129a83
+                url: https://github.com/webmproject/libvpx/archive/refs/tags/v1.14.1.tar.gz
+                sha256: 901747254d80a7937c933d03bd7c5d41e8e6c883e0665fadcb172542167c7977
           - name: x264
             config-opts:
               - "--prefix=${FLATPAK_DEST}"
@@ -160,7 +176,7 @@ modules:
               - ln -srf ${FLATPAK_DEST}/lib/libx264.so.* ${FLATPAK_DEST}/lib/libx264.so
             sources:
               - type: git
-                commit: 1771b556ee45207f8711744ccbd5d42a3949b14c
+                commit: 31e19f92f00c7003fa115047ce50978bc98c3a0d
                 url: https://git.videolan.org/git/x264.git
           - name: x265
             buildsystem: simple
@@ -181,15 +197,15 @@ modules:
               - cd source/build-8 && make install
             sources:
             - type: archive
-              url: https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.3.tar.gz
-              sha256: c6d744a87eda55560da715f56f878640554ddc06e2d0fcbd822fa330affc22cc
+              url: https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.6.tar.gz
+              sha256: 663531f341c5389f460d730e62e10a4fcca3428ca2ca109693867bc5fe2e2807
           - name: fdkaac
             config-opts:
               - "--disable-static"
             sources:
               - type: archive
-                url: https://github.com/mstorsjo/fdk-aac/archive/v2.0.2.tar.gz
-                sha256: 7812b4f0cf66acda0d0fe4302545339517e702af7674dd04e5fe22a5ade16a90
+                url: https://github.com/mstorsjo/fdk-aac/archive/refs/tags/v2.0.3.tar.gz
+                sha256: e25671cd96b10bad896aa42ab91a695a9e573395262baed4e4a2ff178d6a3a78
 
   - name: python3-pyopengl
     buildsystem: simple
